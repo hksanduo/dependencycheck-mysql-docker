@@ -13,9 +13,10 @@ WORKDIR /dependencycheck
 COPY gradle/wrapper/* /dependencycheck/gradle/wrapper/
 COPY gradlew /dependencycheck/
 
+# 安装jdk环境，修改镜像地址，随机生成密码的这个操作是挺骚的
 RUN set -ex && \
-    sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list; \
-    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list; \
+    sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
+    sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list; \
     apt-get update; \
     mkdir -p /usr/share/man/man1; \
     apt-get install -y openjdk-11-jre-headless procps cron; \
@@ -28,6 +29,7 @@ RUN set -ex && \
     chmod 400 /dependencycheck/dc-update.pwd; \
     chown --recursive mysql:mysql /dependencycheck
 
+# copy file to docker
 COPY database.gradle update.sh /dependencycheck/
 COPY initialize_schema.sql /docker-entrypoint-initdb.d/
 COPY initialize_security.sql /docker-entrypoint-initdb.d/
@@ -41,4 +43,5 @@ COPY wrapper.sh /wrapper.sh
 
 EXPOSE 3306
 
+# run mysql with rootj in wrapper.sh
 CMD ["/wrapper.sh"]

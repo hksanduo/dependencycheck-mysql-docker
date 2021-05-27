@@ -19,7 +19,7 @@ buildscript {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
     }
     dependencies {
-        classpath 'org.owasp:dependency-check-gradle:6.0.2'
+        classpath 'org.owasp:dependency-check-gradle:6.1.6'
         classpath 'mysql:mysql-connector-java:8.0.21'
     }
 }
