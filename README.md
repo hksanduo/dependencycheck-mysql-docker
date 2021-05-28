@@ -8,16 +8,7 @@ owasp官方提供了一个dependency check mysql 容器，但是受限于国内�
 docker build -t dependencycheck-mysql:v1 .
 ```
 ### 代理模式
-由于dependency check 会更新cve,cpe库，国内网络环境有点儿尴尬，通过配置镜像站，架设代理来解决，使用的是polipo。配置文件如下：
-```
-logSyslog = true
-logFile = /var/log/polipo/polipo.log
-socksParentProxy = "192.168.3.254:6666"
-socksProxyType = socks5
-proxyPort = 8183
-proxyAddress = "0.0.0.0"
-allowedClients = 127.0.0.1
-```
+由于dependency check 会更新cve,cpe库，国内网络环境有点儿尴尬，通过配置镜像站，架设代理来解决。gradle.properties文件中提供两种代理方法，可以根据实际情况配置。
 
 ## 运行
 ```
@@ -26,7 +17,12 @@ docker run -d \
 -p 3306:3306 \
 -it dependencycheck-mysql:v1
 ```
-
+## 升级
+升级已经做成定时任务，但是升级模块可能会出一些玄学问题，建议先手动执行命令进行升级。
+在/dependencycheck/目录下面执行以下指令进行更新。
+```
+./gradlew --no-daemon -b database.gradle update
+```
 
 ## 参考
 - [https://github.com/stefanneuhaus/dependencycheck-central-mysql-docker](https://github.com/stefanneuhaus/dependencycheck-central-mysql-docker)
